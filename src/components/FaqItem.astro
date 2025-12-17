@@ -1,0 +1,32 @@
+---
+const { q, a } = Astro.props;
+---
+
+<details class="faq">
+  <summary class="q">{q}</summary>
+  <div class="a">{a}</div>
+</details>
+
+<style>
+  .faq{
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.03);
+    border-radius: 16px;
+    padding: 12px 14px;
+  }
+  .q{
+    cursor:pointer;
+    font-weight: 650;
+    color: rgba(255,255,255,.92);
+    list-style:none;
+  }
+  .q::-webkit-details-marker{ display:none; }
+  .a{
+    margin-top: 10px;
+    color: rgba(255,255,255,.72);
+    line-height: 1.45;
+  }
+  .faqItem p{ margin: 10px 0 0; }
+.faqItem p + p{ margin-top: 12px; }
+
+</style>

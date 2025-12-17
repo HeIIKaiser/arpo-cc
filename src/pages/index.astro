@@ -1,16 +1,219 @@
 ---
-
+import SiteCard from "../components/SiteCard.astro";
+import { projects, partners, faqs } from "../data/links";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ARPO.cc</title>
+    <meta name="description" content="The rabbit hole into everything I do." />
+  </head>
+
+  <body>
+    <main class="wrap">
+
+      <header class="hero">
+        <img class="mark" src="/logos/arpo-mark.svg" alt="ARPO" />
+        <h1>ARPO.cc</h1>
+        <p class="tag">The rabbit hole into everything I do</p>
+
+        <a class="cta" href="#faq" data-scroll="#faq">WHAT IS THIS?</a>
+      </header>
+
+      <section class="grid">
+        {projects.map((p) => <SiteCard {...p} variant="project" />)}
+      </section>
+
+      <section class="partners">
+        <h2>CURATED PARTNERS</h2>
+        <div class="partnersGrid">
+          {partners.map((p) => <SiteCard {...p} variant="partner" />)}
+        </div>
+      </section>
+
+      <section id="faq" class="faq">
+        <h2>FAQ</h2>
+        <div class="faqList">
+          {faqs.map((f, i) => (
+            <details class="faqItem" open={i === 0}>
+              <summary>{f.q}</summary>
+              {Array.isArray(f.a)
+  ? f.a.map((para) => <p>{para}</p>)
+  : <p>{f.a}</p>
+}
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <footer class="footer">
+  <p>© 2025 ARPO NEXUS</p>
+  <p class="small">Some partner links may be affiliate links.</p>
+
+  <div class="legal">
+    <p class="small strong">Site operator:</p>
+    <p class="small">
+      ARPO NETWORK OÜ<br />
+      Harju maakond, Kuusalu vald, Pudisoo küla, Männimäe/1, 74626, Estonia<br />
+      Registry code: 17164094
+    </p>
+  </div>
+</footer>
+
+
+    </main>
+
+    <style>
+:global(html){ scroll-behavior: smooth; }
+:global(body){ scroll-behavior: smooth; }
+
+      :global(body){
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: #050505;
+        color: #fff;
+      }
+
+      .wrap{ max-width: 1120px; margin: 0 auto; padding: 28px 18px 80px; }
+
+      .hero{
+        text-align: center;
+        padding: 28px 0 24px;
+      }
+      .mark{
+        width: 82px;
+        height: 82px;
+        margin: 0 auto 12px;
+        display: block;
+      }
+      h1{ margin: 0; font-size: 46px; letter-spacing: .6px; }
+      .tag{ margin: 8px 0 18px; opacity: .55; font-size: 18px; }
+
+      .cta{
+        display: inline-block;
+        background: #e10000;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 900;
+        letter-spacing: .6px;
+        padding: 14px 26px;
+        border-radius: 8px;
+      }
+      .cta:hover{ filter: brightness(1.06); }
+
+      .grid{
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;   /* centers 3+1, 3+2, etc. */
+  gap: 34px 22px;            /* more vertical space so shadows never “overlap” */
+}
+      @media (max-width: 980px){
+        .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (max-width: 640px){
+        h1{ font-size: 38px; }
+        .grid{ grid-template-columns: 1fr; }
+      }
+
+      .partners{
+        margin-top: 96px;
+        text-align: center;
+      }
+      .partners h2{
+        margin: 0 0 18px;
+        color: #1c7dbb;
+        letter-spacing: .8px;
+        font-size: 18px;
+      }
+.partnersGrid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+}
+
+
+      .faq{
+        margin-top: 96px;
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .faq h2{
+        margin: 0 0 14px;
+        font-size: 20px;
+        letter-spacing: .4px;
+      }
+      .faqList{ display: grid; gap: 10px; }
+
+      .faqItem{
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: rgba(255,255,255,.03);
+      }
+      .faqItem summary{
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+      }
+      .faqItem summary::-webkit-details-marker{ display:none; }
+      .faqItem p{
+        margin: 10px 0 0;
+        opacity: .75;
+        line-height: 1.55;
+      }
+
+      .footer{
+        margin-top: 70px;
+        text-align: center;
+        opacity: .7;
+      }
+      .small{ font-size: 13px; opacity: .7; margin-top: 6px; }
+    </style>
+	<script is:inline>
+(() => {
+  const link = document.querySelector('[data-scroll]');
+  if (!link) return;
+
+  link.addEventListener('click', (e) => {
+    const selector = link.getAttribute('data-scroll');
+    const target = selector ? document.querySelector(selector) : null;
+    if (!target) return;
+
+    e.preventDefault();
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    const startY = window.scrollY;
+    const endY = target.getBoundingClientRect().top + startY - 16; // 16px breathing room
+
+    if (reduce) {
+      window.scrollTo(0, endY);
+      history.replaceState(null, '', selector);
+      return;
+    }
+
+    const duration = 450;
+    const start = performance.now();
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const y = startY + (endY - startY) * easeOutCubic(t);
+      window.scrollTo(0, y);
+      if (t < 1) requestAnimationFrame(step);
+      else history.replaceState(null, '', selector);
+    };
+
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+
+  </body>
 </html>

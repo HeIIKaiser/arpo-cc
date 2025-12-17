@@ -1,0 +1,198 @@
+---
+import type { CardLink } from "../data/links";
+
+type Variant = "project" | "partner";
+
+interface Props extends CardLink {
+  variant?: Variant;
+}
+
+const { title, url, desc, logo, buttonLabel, rel, variant = "project" } = Astro.props as Props;
+---
+
+<a class:list={["card", variant]} href={url} target="_blank" rel={rel ?? "noopener noreferrer"}>
+  <div class="logoWrap">
+    <img src={logo} alt="" loading="lazy" />
+  </div>
+
+  <h3 class="title">{title}</h3>
+  <p class="desc">{desc}</p>
+
+  <div class="btn" role="presentation">
+    {buttonLabel ?? "VISIT"}
+  </div>
+</a>
+
+<style>
+  .card{
+    background: #f6f6f6;
+    border-radius: 14px;
+    padding: 28px 22px 22px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.30);
+    text-align: center;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+
+    position: relative;
+    overflow: hidden;
+
+    transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+  }
+
+  /* IMPORTANT: lock PROJECT card width so last row doesn't grow wider */
+  .card.project{
+    width: 320px;
+    flex: 0 0 320px;     /* no grow, no shrink -> always same width */
+    min-height: 430px;   /* optional: keeps heights consistent too */
+  }
+
+  /* On small screens, allow full width */
+  @media (max-width: 720px){
+    .card.project{
+      width: 100%;
+      flex: 1 1 100%;
+      min-height: auto;
+    }
+  }
+
+  /* kill any global underline rules */
+  .card, .card * { text-decoration: none !important; }
+  .card:visited{ color: inherit; }
+
+  .card:hover{
+    transform: translateY(-3px);
+    background: #ffffff;
+    box-shadow: 0 18px 55px rgba(0,0,0,.38);
+  }
+  .card:active{ transform: translateY(-1px); }
+
+  /* keyboard focus */
+  .card:focus-visible{
+    outline: 3px solid rgba(225,0,0,.55);
+    outline-offset: 4px;
+  }
+  .card.partner:focus-visible{
+    outline-color: rgba(28,125,187,.55);
+  }
+
+  /* neon edge overlay */
+  .card::after{
+    content:"";
+    position:absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events:none;
+    opacity: 0;
+    transition: opacity .14s ease;
+  }
+
+  .card.project::after{
+    box-shadow:
+      0 0 0 1px rgba(225,0,0,.65),
+      0 0 18px rgba(225,0,0,.35),
+      0 0 38px rgba(225,0,0,.18);
+  }
+
+  .card.partner::after{
+    box-shadow:
+      0 0 0 1px rgba(28,125,187,.65),
+      0 0 18px rgba(28,125,187,.35),
+      0 0 38px rgba(28,125,187,.18);
+  }
+
+  .card:hover::after{ opacity: 1; }
+
+  .logoWrap{
+    height: 110px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 10px;
+  }
+
+  .logoWrap img{
+    max-height: 78px;
+    max-width: 150px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .title{
+    margin: 12px 0 10px;
+    letter-spacing: .6px;
+    font-weight: 800;
+    color: #9b0000;
+    font-size: 18px;
+    text-transform: uppercase;
+
+    min-height: 48px;
+    display: grid;
+    place-items: center;
+  }
+
+  .partner .title{
+    color: #1c7dbb;
+    font-size: 16px;
+    min-height: 40px;
+  }
+
+  .desc{
+    margin: 0 0 18px;
+    color: rgba(0,0,0,.62);
+    line-height: 1.55;
+    font-size: 14px;
+
+    flex: 1;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+  }
+
+  .partner .desc{ -webkit-line-clamp: 3; }
+
+  .btn{
+    margin-top: auto;
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #5b6066;
+    color: white;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .4px;
+    width: 100%;
+    box-sizing: border-box;
+
+    transition: filter .14s ease, transform .14s ease;
+  }
+
+  .card:hover .btn{
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+ /* partner cards: same width as projects */
+.card.partner{
+  width: 320px;
+  flex: 0 0 320px;
+  min-height: 320px;
+  padding: 22px 18px 18px;
+}
+
+.card.partner .logoWrap{ height: 80px; }
+
+@media (max-width: 720px){
+  .card.partner{
+    width: 100%;
+    flex: 1 1 100%;
+    min-height: auto;
+  }
+}
+
+</style>

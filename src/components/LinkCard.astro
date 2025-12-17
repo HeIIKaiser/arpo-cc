@@ -1,0 +1,41 @@
+---
+const { title, url, desc, badge, icon, rel } = Astro.props;
+---
+
+<a class="card" href={url} target="_blank" rel={rel ?? "noopener noreferrer"}>
+  <div class="top">
+    <div class="title">
+      {icon && <span class="icon" aria-hidden="true">{icon}</span>}
+      <span>{title}</span>
+    </div>
+    {badge && <span class="badge">{badge}</span>}
+  </div>
+  {desc && <p class="desc">{desc}</p>}
+</a>
+
+<style>
+  .card{
+  display:block;
+  padding:16px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  text-decoration:none;
+  color: rgba(255,255,255,.92);
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.card:visited{ color: rgba(255,255,255,.92); }
+
+.card:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.05);
+}
+
+.title span{ color: rgba(255,255,255,.96); }
+.desc{ color: rgba(255,255,255,.72); }
+
+
+
+</style>
