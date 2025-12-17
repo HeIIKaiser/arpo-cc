@@ -41,6 +41,13 @@ export const projects: CardLink[] = [
     logo: "/logos/kindaforked.svg",
     buttonLabel: "KINDAFORKED.COM",
   },
+  {
+    title: "GITHUB",
+    url: "https://github.com/HeIIKaiser",
+    desc: "Track my latest coding experiments, open-source releases, and the tooling that powers ARPO projects.",
+    logo: "/logos/github-mark.svg",
+    buttonLabel: "GITHUB.COM",
+  },
 ];
 
 export const partners: CardLink[] = [
