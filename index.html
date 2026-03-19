@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARPO.cc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --bg:          #0b0b0e;
+      --surface:     #111116;
+      --surface-2:   #18181f;
+      --border:      rgba(255,255,255,0.07);
+      --border-h:    rgba(255,255,255,0.14);
+      --text:        #e8e8f0;
+      --text-muted:  #7a7a8c;
+      --text-dim:    #4a4a5a;
+      --accent:      #c8a96e;
+      --accent-glow: rgba(200,169,110,0.15);
+      --accent-dim:  rgba(200,169,110,0.08);
+      --radius:      12px;
+      --radius-lg:   18px;
+      --font-head:   'Syne', sans-serif;
+      --font-body:   'DM Sans', sans-serif;
+      --transition:  0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── NOISE OVERLAY ──────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── WRAPPER ────────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .site-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 72px 0 56px;
+      text-align: center;
+    }
+
+    .site-header .logo-mark {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .site-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .site-header p {
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+    }
+
+    .faq-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 18px;
+      font-size: 12px;
+      font-family: var(--font-head);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 99px;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .faq-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ─── SECTION ────────────────────────────────────────────── */
+    .section {
+      margin-bottom: 64px;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-label span {
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── SITE CARDS (primary grid) ──────────────────────────── */
+    .sites-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .site-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 22px 18px;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      flex: 0 1 calc((100% - 24px) / 3);
+      min-width: 0;
+    }
+
+    .site-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, var(--accent-dim), transparent 70%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .site-card:hover {
+      border-color: var(--border-h);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+    }
+    .site-card:hover::before { opacity: 1; }
+
+    .site-card.placeholder {
+      border-style: dashed;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .card-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    .card-logo-placeholder {
+      width: 40px;
+      height: 40px;
+      background: var(--surface-2);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .card-name {
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-url {
+      margin-top: 14px;
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+    .site-card:hover .card-url { color: var(--accent); }
+
+    /* ─── PROFILE CARDS (compact row) ───────────────────────── */
+    .profiles-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      transition: border-color var(--transition), background var(--transition);
+      flex: 0 1 calc((100% - 20px) / 3);
+      min-width: 148px;
+    }
+
+    .profile-card:hover {
+      border-color: var(--border-h);
+      background: var(--surface-2);
+    }
+
+    .profile-icon {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .profile-icon-svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      opacity: 0.85;
+      fill: var(--text-muted);
+      transition: fill var(--transition), opacity var(--transition);
+    }
+    .profile-card:hover .profile-icon-svg { fill: var(--text); opacity: 1; }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-handle {
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ─── AFFILIATE CARDS ────────────────────────────────────── */
+    .affiliate-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .affiliate-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      width: 100%;
+      transition: border-color var(--transition), background var(--transition), transform var(--transition);
+    }
+    .affiliate-card:hover {
+      border-color: var(--border-h);
+      background: var(--surface-2);
+      transform: translateY(-1px);
+    }
+
+    .affiliate-logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .affiliate-info { min-width: 0; }
+
+    .affiliate-name {
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .affiliate-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .affiliate-badge {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-family: var(--font-head);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(200,169,110,0.3);
+      padding: 3px 8px;
+      border-radius: 99px;
+    }
+
+    /* ─── FAQ ────────────────────────────────────────────────── */
+    .faq-section {
+      margin-bottom: 64px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      text-align: left;
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 18px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: color var(--transition);
+    }
+    .faq-question:hover { color: var(--accent); }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--text-dim);
+      transition: transform var(--transition), color var(--transition);
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); color: var(--accent); }
+    .faq-item.open .faq-question { color: var(--accent); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .faq-item.open .faq-answer { max-height: 300px; }
+
+    .faq-answer p {
+      padding-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-legal {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .site-card { flex: 0 1 100%; }
+      .profiles-grid { gap: 8px; }
+      .profile-card { flex: 0 1 calc((100% - 8px) / 2); }
+      .affiliate-card { flex: 1 1 100%; }
+    }
+
+    @media (max-width: 420px) {
+      .profile-card { flex: 0 1 100%; }
+    }
+
+    /* ─── FADE-IN ANIMATION ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-header  { animation: fadeUp 0.5s ease both; }
+    .section:nth-of-type(1) { animation: fadeUp 0.5s 0.1s ease both; }
+    .section:nth-of-type(2) { animation: fadeUp 0.5s 0.2s ease both; }
+    .section:nth-of-type(3) { animation: fadeUp 0.5s 0.3s ease both; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ─── HEADER ──────────────────────────────────────────── -->
+    <header class="site-header">
+      <img src="/logos/arpo-mark.svg" alt="ARPO" class="logo-mark" />
+      <h1>ARPO.CC</h1>
+      <p>The rabbit hole into everything I do</p>
+      <a href="#faq" class="faq-link">What is this?</a>
+    </header>
+
+    <!-- ─── SECTION 1: ARPO WEBSITES ───────────────────────── -->
+    <section class="section" id="arpo-sites">
+      <div class="section-label"><span>ARPO Websites</span></div>
+      <div class="sites-grid">
+
+        <a class="site-card" href="https://romanporubsky.com/" target="_blank" rel="noopener">
+          <img src="/logos/romanporubsky.svg" alt="Roman Porubský" class="card-logo" />
+          <div class="card-name">Roman Porubský</div>
+          <div class="card-desc">Books, writing, and creative projects. A personal hub for stories, updates, and more.</div>
+          <div class="card-url">romanporubsky.com ↗</div>
+        </a>
+
+        <a class="site-card" href="https://store.arpo.cc/" target="_blank" rel="noopener">
+          <div class="card-logo-placeholder">STR</div>
+          <div class="card-name">Store</div>
+          <div class="card-desc">Books, merch, and digital goods — straight from the source.</div>
+          <div class="card-url">store.arpo.cc ↗</div>
+        </a>
+
+        <a class="site-card" href="https://magazine.arpo.cc/" target="_blank" rel="noopener">
+          <div class="card-logo-placeholder">MAG</div>
+          <div class="card-name">Magazine</div>
+          <div class="card-desc">Commentary, tech, food, reviews, and everything in between — one blog to cover it all.</div>
+          <div class="card-url">magazine.arpo.cc ↗</div>
+        </a>
+
+        <a class="site-card" href="https://www.webya.eu/" target="_blank" rel="noopener">
+          <img src="/logos/webya.svg" alt="Webya" class="card-logo" />
+          <div class="card-name">Webya</div>
+          <div class="card-desc">Modern websites and graphic design — tailored for creators, startups, and small businesses.</div>
+          <div class="card-url">webya.eu ↗</div>
+        </a>
+
+        <a class="site-card" href="https://www.eztoria.eu/" target="_blank" rel="noopener">
+          <img src="/logos/eztoria.svg" alt="Eztoria" class="card-logo" />
+          <div class="card-name">Eztoria</div>
+          <div class="card-desc">Helping entrepreneurs across Europe set up Estonian companies — full-service or free DIY guides.</div>
+          <div class="card-url">eztoria.eu ↗</div>
+        </a>
+              
+        <div class="site-card placeholder">
+          <div class="card-logo-placeholder">CST</div>
+          <div class="card-name">Consulting</div>
+          <div class="card-desc">Coming soon.</div>
+          <div class="card-url">— ↗</div>
+        </div>
+
+        <div class="site-card placeholder">
+          <div class="card-logo-placeholder">PUB</div>
+          <div class="card-name">Publishing</div>
+          <div class="card-desc">Coming soon.</div>
+          <div class="card-url">— ↗</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── SECTION 2: EXTERNAL PROFILES ───────────────────── -->
+    <section class="section" id="profiles">
+      <div class="section-label"><span>Find Me On</span></div>
+      <div class="profiles-grid">
+
+        <a class="profile-card" href="https://github.com/HeIIKaiser" target="_blank" rel="noopener">
+          <!-- GitHub icon -->
+          <svg class="profile-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <div class="profile-info">
+            <div class="profile-name">GitHub</div>
+            <div class="profile-handle">HeIIKaiser</div>
+          </div>
+        </a>
+
+        <a class="profile-card" href="https://www.linkedin.com/in/roman-porubský-761771275" target="_blank" rel="noopener">
+          <!-- LinkedIn icon -->
+          <svg class="profile-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          <div class="profile-info">
+            <div class="profile-name">LinkedIn</div>
+            <div class="profile-handle">roman-porubský</div>
+          </div>
+        </a>
+
+        <a class="profile-card" href="https://www.patreon.com/" target="_blank" rel="noopener">
+          <!-- Patreon icon -->
+          <svg class="profile-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"/>
+          </svg>
+          <div class="profile-info">
+            <div class="profile-name">Patreon</div>
+            <div class="profile-handle">Support my work</div>
+          </div>
+        </a>
+
+        <a class="profile-card" href="https://www.wattpad.com/user/RomanPorubsky" target="_blank" rel="noopener">
+          <!-- Wattpad – stylised W -->
+          <svg class="profile-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23 7h-2.2l-2.3 9.6L16 7h-2l-2.5 9.6L9.2 7H7l3 10h2.2L15 6.9 17.8 17H20L23 7zM1 7l3 10h2.2L9 7H7L5.1 14.5 3.2 7H1z"/>
+          </svg>
+          <div class="profile-info">
+            <div class="profile-name">Wattpad</div>
+            <div class="profile-handle">RomanPorubsky</div>
+          </div>
+        </a>
+
+        <a class="profile-card" href="https://www.royalroad.com/profile/626405" target="_blank" rel="noopener">
+          <!-- Royal Road – crown shape -->
+          <svg class="profile-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 17l1.5-9 3.5 4 4-7 4 7 3.5-4L21 17H3zm0 2h18v2H3v-2z"/>
+          </svg>
+          <div class="profile-info">
+            <div class="profile-name">Royal Road</div>
+            <div class="profile-handle">Serialized fiction</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ─── SECTION 3: AFFILIATE PARTNERS ──────────────────── -->
+    <section class="section" id="partners">
+      <div class="section-label"><span>Curated Partners</span></div>
+      <div class="affiliate-grid">
+
+        <a class="affiliate-card" href="https://go.getproton.me/aff_c?offer_id=43&aff_id=11079" target="_blank" rel="noopener">
+          <img src="/logos/proton.svg" alt="Proton" class="affiliate-logo" />
+          <div class="affiliate-info">
+            <div class="affiliate-name">Proton</div>
+            <div class="affiliate-desc">Secure email, VPN, and cloud storage. Privacy by default.</div>
+          </div>
+          <span class="affiliate-badge">Affiliate</span>
+        </a>
+
+        <a class="affiliate-card" href="https://www.websupport.sk/?ref=NTsvFFMw" target="_blank" rel="noopener">
+          <!-- WebSupport – WS monogram -->
+          <svg class="affiliate-logo" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="8" fill="#1a1a2e"/>
+            <text x="18" y="23" text-anchor="middle" font-family="'Syne',sans-serif" font-weight="700" font-size="14" fill="#4dabf7">WS</text>
+          </svg>
+          <div class="affiliate-info">
+            <div class="affiliate-name">WebSupport</div>
+            <div class="affiliate-desc">Slovakia's largest hosting provider and domain registrar. Reliable, local, battle-tested.</div>
+          </div>
+          <span class="affiliate-badge">Affiliate</span>
+        </a>
+
+        <!-- Add more affiliate cards here -->
+
+      </div>
+    </section>
+
+    <!-- ─── FAQ ─────────────────────────────────────────────── -->
+    <section class="faq-section" id="faq">
+      <div class="section-label"><span>FAQ</span></div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          What is ARPO.cc?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <p>ARPO.cc is a personal hub for everything I work on — writing, web projects, tools I rely on, and the various side projects that somehow all fit under one brand. The idea is simple: one place that points you to the right place.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          How can I join your platform?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <p>Short answer: you can't, and that's intentional. The ARPO Websites section features only sites I own and operate under ARPO NETWORK — it's not open to outside brands.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Are partner links affiliate links?
+          <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer" role="region">
+          <p>Some are. The Partners section is curated — if something appears there, it's because I've used it myself and trust it enough to recommend. If you purchase through an affiliate link, I may earn a commission at no extra cost to you.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─── FOOTER ───────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="footer-copy">© <script>document.write(new Date().getFullYear())</script> ARPO NEXUS</div>
+      <div class="footer-legal">
+        Site operator: ARPO NETWORK OÜ · Harju maakond, Kuusalu vald, Pudisoo küla, Männimäe/1, 74626, Estonia · Registry code: 17164094
+      </div>
+      <div class="footer-note">Some partner links may be affiliate links.</div>
+    </footer>
+
+  </div><!-- /.page -->
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+        // Toggle clicked
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
